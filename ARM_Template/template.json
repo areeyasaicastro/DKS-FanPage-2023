@@ -1,208 +1,98 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "sites_DOFanPage2023_name": {
-            "defaultValue": "DOFanPage2023",
-            "type": "String"
-        },
-        "serverfarms_DOFanPage20230925160541Plan_externalid": {
-            "defaultValue": "/subscriptions/021786c7-a35f-4548-91a2-4f277e6e7c6f/resourceGroups/do-solo-fanpage/providers/Microsoft.Web/serverfarms/DOFanPage20230925160541Plan",
-            "type": "String"
-        }
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subscriptionId": {
+      "type": "string"
     },
-    "variables": {},
-    "resources": [
-        {
-            "type": "Microsoft.Web/sites",
-            "apiVersion": "2022-09-01",
-            "name": "[parameters('sites_DOFanPage2023_name')]",
-            "location": "East US",
-            "tags": {
-                "hidden-related:/subscriptions/021786c7-a35f-4548-91a2-4f277e6e7c6f/resourceGroups/do-solo-fanpage/providers/Microsoft.Web/serverFarms/DOFanPage20230925160541Plan": "empty"
+    "name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "string"
+    },
+    "serverFarmResourceGroup": {
+      "type": "string"
+    },
+    "alwaysOn": {
+      "type": "bool"
+    },
+    "ftpsState": {
+      "type": "string"
+    },
+    "currentStack": {
+      "type": "string"
+    },
+    "phpVersion": {
+      "type": "string"
+    },
+    "netFrameworkVersion": {
+      "type": "string"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('name')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[parameters('location')]",
+      "tags": null,
+      "dependsOn": [
+        "microsoft.insights/components/TASK-1-TEST"
+      ],
+      "properties": {
+        "name": "[parameters('name')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference('microsoft.insights/components/TASK-1-TEST', '2015-05-01').ConnectionString]"
             },
-            "kind": "app",
-            "identity": {
-                "type": "SystemAssigned"
+            {
+              "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+              "value": "~3"
             },
-            "properties": {
-                "enabled": true,
-                "hostNameSslStates": [
-                    {
-                        "name": "dofanpage2023.azurewebsites.net",
-                        "sslState": "Disabled",
-                        "hostType": "Standard"
-                    },
-                    {
-                        "name": "dofanpage2023.scm.azurewebsites.net",
-                        "sslState": "Disabled",
-                        "hostType": "Repository"
-                    }
-                ],
-                "serverFarmId": "[parameters('serverfarms_DOFanPage20230925160541Plan_externalid')]",
-                "reserved": false,
-                "isXenon": false,
-                "hyperV": false,
-                "vnetRouteAllEnabled": false,
-                "vnetImagePullEnabled": false,
-                "vnetContentShareEnabled": false,
-                "siteConfig": {
-                    "numberOfWorkers": 1,
-                    "acrUseManagedIdentityCreds": false,
-                    "alwaysOn": false,
-                    "http20Enabled": false,
-                    "functionAppScaleLimit": 0,
-                    "minimumElasticInstanceCount": 0
-                },
-                "scmSiteAlsoStopped": false,
-                "clientAffinityEnabled": true,
-                "clientCertEnabled": false,
-                "clientCertMode": "Required",
-                "hostNamesDisabled": false,
-                "customDomainVerificationId": "5D6756DD50EF072B0BFDE0616169AF9F76A0C57FE060B0687D6BD4479F2C1859",
-                "containerSize": 0,
-                "dailyMemoryTimeQuota": 0,
-                "httpsOnly": true,
-                "redundancyMode": "None",
-                "storageAccountRequired": false,
-                "keyVaultReferenceIdentity": "SystemAssigned"
+            {
+              "name": "XDT_MicrosoftApplicationInsights_Mode",
+              "value": "Recommended"
             }
-        },
-        {
-            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('sites_DOFanPage2023_name'), '/ftp')]",
-            "location": "East US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_DOFanPage2023_name'))]"
-            ],
-            "tags": {
-                "hidden-related:/subscriptions/021786c7-a35f-4548-91a2-4f277e6e7c6f/resourceGroups/do-solo-fanpage/providers/Microsoft.Web/serverFarms/DOFanPage20230925160541Plan": "empty"
-            },
-            "properties": {
-                "allow": true
+          ],
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "[parameters('currentStack')]"
             }
+          ],
+          "phpVersion": "[parameters('phpVersion')]",
+          "netFrameworkVersion": "[parameters('netFrameworkVersion')]",
+          "alwaysOn": "[parameters('alwaysOn')]",
+          "ftpsState": "[parameters('ftpsState')]"
         },
-        {
-            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('sites_DOFanPage2023_name'), '/scm')]",
-            "location": "East US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_DOFanPage2023_name'))]"
-            ],
-            "tags": {
-                "hidden-related:/subscriptions/021786c7-a35f-4548-91a2-4f277e6e7c6f/resourceGroups/do-solo-fanpage/providers/Microsoft.Web/serverFarms/DOFanPage20230925160541Plan": "empty"
-            },
-            "properties": {
-                "allow": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('sites_DOFanPage2023_name'), '/web')]",
-            "location": "East US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_DOFanPage2023_name'))]"
-            ],
-            "tags": {
-                "hidden-related:/subscriptions/021786c7-a35f-4548-91a2-4f277e6e7c6f/resourceGroups/do-solo-fanpage/providers/Microsoft.Web/serverFarms/DOFanPage20230925160541Plan": "empty"
-            },
-            "properties": {
-                "numberOfWorkers": 1,
-                "defaultDocuments": [
-                    "Default.htm",
-                    "Default.html",
-                    "Default.asp",
-                    "index.htm",
-                    "index.html",
-                    "iisstart.htm",
-                    "default.aspx",
-                    "index.php",
-                    "hostingstart.html"
-                ],
-                "netFrameworkVersion": "v6.0",
-                "phpVersion": "5.6",
-                "requestTracingEnabled": false,
-                "remoteDebuggingEnabled": false,
-                "httpLoggingEnabled": false,
-                "acrUseManagedIdentityCreds": false,
-                "logsDirectorySizeLimit": 35,
-                "detailedErrorLoggingEnabled": false,
-                "publishingUsername": "$DOFanPage2023",
-                "scmType": "None",
-                "use32BitWorkerProcess": true,
-                "webSocketsEnabled": false,
-                "alwaysOn": false,
-                "managedPipelineMode": "Integrated",
-                "virtualApplications": [
-                    {
-                        "virtualPath": "/",
-                        "physicalPath": "site\\wwwroot",
-                        "preloadEnabled": false
-                    }
-                ],
-                "loadBalancing": "LeastRequests",
-                "experiments": {
-                    "rampUpRules": []
-                },
-                "autoHealEnabled": false,
-                "vnetRouteAllEnabled": false,
-                "vnetPrivatePortsCount": 0,
-                "localMySqlEnabled": false,
-                "managedServiceIdentityId": 12809,
-                "ipSecurityRestrictions": [
-                    {
-                        "ipAddress": "Any",
-                        "action": "Allow",
-                        "priority": 2147483647,
-                        "name": "Allow all",
-                        "description": "Allow all access"
-                    }
-                ],
-                "scmIpSecurityRestrictions": [
-                    {
-                        "ipAddress": "Any",
-                        "action": "Allow",
-                        "priority": 2147483647,
-                        "name": "Allow all",
-                        "description": "Allow all access"
-                    }
-                ],
-                "scmIpSecurityRestrictionsUseMain": false,
-                "http20Enabled": false,
-                "minTlsVersion": "1.2",
-                "scmMinTlsVersion": "1.2",
-                "ftpsState": "FtpsOnly",
-                "preWarmedInstanceCount": 0,
-                "elasticWebAppScaleLimit": 0,
-                "functionsRuntimeScaleMonitoringEnabled": false,
-                "minimumElasticInstanceCount": 0,
-                "azureStorageAccounts": {}
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('sites_DOFanPage2023_name'), '/', parameters('sites_DOFanPage2023_name'), '.azurewebsites.net')]",
-            "location": "East US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_DOFanPage2023_name'))]"
-            ],
-            "properties": {
-                "siteName": "DOFanPage2023",
-                "hostNameType": "Verified"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/siteextensions",
-            "apiVersion": "2022-09-01",
-            "name": "[concat(parameters('sites_DOFanPage2023_name'), '/Microsoft.AspNetCore.AzureAppServices.SiteExtension')]",
-            "location": "East US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_DOFanPage2023_name'))]"
-            ]
-        }
-    ]
+        "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+        "clientAffinityEnabled": true,
+        "virtualNetworkSubnetId": null,
+        "httpsOnly": true,
+        "publicNetworkAccess": "Enabled"
+      }
+    },
+    {
+      "apiVersion": "2020-02-02-preview",
+      "name": "TASK-1-TEST",
+      "type": "microsoft.insights/components",
+      "location": "eastasia",
+      "tags": null,
+      "dependsOn": [],
+      "properties": {
+        "ApplicationId": "[parameters('name')]",
+        "Request_Source": "IbizaWebAppExtensionCreate",
+        "Flow_Type": "Redfield",
+        "Application_Type": "web",
+        "WorkspaceResourceId": "/subscriptions/021786c7-a35f-4548-91a2-4f277e6e7c6f/resourceGroups/DefaultResourceGroup-EA/providers/Microsoft.OperationalInsights/workspaces/DefaultWorkspace-021786c7-a35f-4548-91a2-4f277e6e7c6f-EA"
+      }
+    }
+  ]
 }

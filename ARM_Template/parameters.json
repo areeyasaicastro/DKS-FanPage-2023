@@ -1,12 +1,36 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-        "sites_DOFanPage2023_name": {
-            "value": null
-        },
-        "serverfarms_DOFanPage20230925160541Plan_externalid": {
-            "value": null
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "subscriptionId": {
+      "value": "021786c7-a35f-4548-91a2-4f277e6e7c6f"
+    },
+    "name": {
+      "value": "TASK-1-TEST"
+    },
+    "location": {
+      "value": "East Asia"
+    },
+    "hostingPlanName": {
+      "value": "Task2DOfanPage2023Plan"
+    },
+    "serverFarmResourceGroup": {
+      "value": "do-solo-fanpage"
+    },
+    "alwaysOn": {
+      "value": false
+    },
+    "ftpsState": {
+      "value": "FtpsOnly"
+    },
+    "currentStack": {
+      "value": "dotnet"
+    },
+    "phpVersion": {
+      "value": "OFF"
+    },
+    "netFrameworkVersion": {
+      "value": "v6.0"
     }
+  }
 }
